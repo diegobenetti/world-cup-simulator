@@ -70,7 +70,7 @@
     "flagPath": "data/flags/CPV.png"
   },
   "COD": {
-    "name": "Congo DR",
+    "name": "Congo",
     "code": "COD",
     "flagPath": "data/flags/COD.png"
   },
@@ -185,7 +185,7 @@
     "flagPath": "data/flags/CAN.png"
   },
   "KOR": {
-    "name": "Korea Republic",
+    "name": "South Korea",
     "code": "KOR",
     "flagPath": "data/flags/KOR.png"
   },

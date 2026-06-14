@@ -235,7 +235,7 @@ function GroupCard({
         )}
       </div>
 
-      <div className="flex p-2 gap-2">
+      <div className="flex p-2 gap-1">
         {/* Standings */}
         <div className="flex-1 min-w-0">
           <StandingsTable standings={standings} teams={teams} />
