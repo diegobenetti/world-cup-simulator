@@ -1,0 +1,375 @@
+'use client';
+
+import { useState } from 'react';
+
+// ── Types ──────────────────────────────────────────────────────────────────
+
+export interface TeamStanding {
+  teamCode: string;
+  played: number;
+  won: number;
+  drawn: number;
+  lost: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  goalDifference: number;
+  points: number;
+}
+
+export interface Team {
+  name: string;
+  code: string;
+}
+
+export type ScoreEntry = { home: string; away: string };
+export type MatchInfo = { home: string; away: string; date: string };
+type GroupScores = Record<string, ScoreEntry>; // key = "HOME-AWAY"
+type AllScores = Record<string, GroupScores>;  // key = group label
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+
+function flagUrl(code: string) {
+  return `https://api.fifa.com/api/v3/picture/flags-sq-3/${code}`;
+}
+
+function roundRobinMatches(codes: string[]): [string, string][] {
+  const out: [string, string][] = [];
+  for (let i = 0; i < codes.length; i++)
+    for (let j = i + 1; j < codes.length; j++)
+      out.push([codes[i], codes[j]]);
+  return out;
+}
+
+function computeStandings(
+  teamCodes: string[],
+  groupScores: GroupScores,
+): TeamStanding[] {
+  const stats: Record<string, TeamStanding> = {};
+  for (const code of teamCodes) {
+    stats[code] = {
+      teamCode: code, played: 0, won: 0, drawn: 0, lost: 0,
+      goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0,
+    };
+  }
+
+  for (const [home, away] of roundRobinMatches(teamCodes)) {
+    const key = `${home}-${away}`;
+    const s = groupScores[key];
+    if (!s) continue;
+    const h = parseInt(s.home, 10);
+    const a = parseInt(s.away, 10);
+    if (isNaN(h) || isNaN(a) || s.home === '' || s.away === '') continue;
+
+    stats[home].played++;
+    stats[away].played++;
+    stats[home].goalsFor += h;
+    stats[home].goalsAgainst += a;
+    stats[away].goalsFor += a;
+    stats[away].goalsAgainst += h;
+    stats[home].goalDifference += h - a;
+    stats[away].goalDifference += a - h;
+
+    if (h > a) {
+      stats[home].won++;   stats[home].points += 3;
+      stats[away].lost++;
+    } else if (a > h) {
+      stats[away].won++;   stats[away].points += 3;
+      stats[home].lost++;
+    } else {
+      stats[home].drawn++; stats[home].points++;
+      stats[away].drawn++; stats[away].points++;
+    }
+  }
+
+  return Object.values(stats).sort(
+    (a, b) =>
+      b.points - a.points ||
+      b.goalDifference - a.goalDifference ||
+      b.goalsFor - a.goalsFor,
+  );
+}
+
+function formatMatchDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+}
+
+function groupIsModified(current: GroupScores, initial: GroupScores): boolean {
+  // A group is "modified" (SIM mode) when the user has changed any score
+  // from the real result seeded at load time.
+  const allKeys = new Set([...Object.keys(current), ...Object.keys(initial)]);
+  for (const key of allKeys) {
+    const c = current[key] ?? { home: '', away: '' };
+    const i = initial[key] ?? { home: '', away: '' };
+    if (c.home !== i.home || c.away !== i.away) return true;
+  }
+  return false;
+}
+
+// ── Sub-components ─────────────────────────────────────────────────────────
+
+function Flag({ code, size = 'md' }: { code: string; size?: 'sm' | 'md' }) {
+  const cls = size === 'sm' ? 'w-6 h-4' : 'w-8 h-[22px]';
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={flagUrl(code)} alt={code} className={`${cls} object-cover rounded-[2px] shrink-0`} />;
+}
+
+function ScoreInput({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <input
+      type="text"
+      inputMode="numeric"
+      pattern="[0-9]*"
+      maxLength={2}
+      value={value}
+      placeholder="–"
+      onChange={(e) =>
+        onChange(e.target.value.replace(/[^0-9]/g, '').slice(0, 2))
+      }
+      className="w-7 h-6 text-center bg-gray-800 border border-gray-700 rounded text-white text-xs focus:border-green-500 focus:outline-none placeholder-gray-600"
+    />
+  );
+}
+
+function StandingsTable({
+  standings,
+  teams,
+}: {
+  standings: TeamStanding[];
+  teams: Record<string, Team>;
+}) {
+  return (
+    <table className="w-full text-sm">
+      <thead>
+        <tr className="text-gray-500 text-xs uppercase tracking-wider">
+          <th className="text-left font-medium pb-1 pr-2">Team</th>
+          <th className="text-center font-medium pb-1 w-6">P</th>
+          <th className="text-center font-medium pb-1 w-6">W</th>
+          <th className="text-center font-medium pb-1 w-6">D</th>
+          <th className="text-center font-medium pb-1 w-6">L</th>
+          <th className="text-center font-medium pb-1 w-8">GD</th>
+          <th className="text-center font-medium pb-1 w-8">Pts</th>
+        </tr>
+      </thead>
+      <tbody>
+        {standings.map((row, i) => {
+          const team = teams[row.teamCode];
+          const qualified = i < 2;
+          return (
+            <tr
+              key={row.teamCode}
+              className={`border-t border-gray-800 ${qualified ? 'text-white' : 'text-gray-400'}`}
+            >
+              <td className="py-1 pr-2">
+                <div className="flex items-center gap-1.5">
+                  <Flag code={row.teamCode} size="sm" />
+                  <span className="truncate text-xs">{team?.name ?? row.teamCode}</span>
+                </div>
+              </td>
+              <td className="text-center py-1 text-xs">{row.played}</td>
+              <td className="text-center py-1 text-xs">{row.won}</td>
+              <td className="text-center py-1 text-xs">{row.drawn}</td>
+              <td className="text-center py-1 text-xs">{row.lost}</td>
+              <td className="text-center py-1 text-xs">
+                {row.goalDifference > 0 ? `+${row.goalDifference}` : row.goalDifference}
+              </td>
+              <td className="text-center py-1 text-xs font-bold">{row.points}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
+
+function GroupCard({
+  label,
+  teamCodes,
+  teams,
+  realStandings,
+  groupScores,
+  initialGroupScores,
+  matchSchedule,
+  onScoreChange,
+}: {
+  label: string;
+  teamCodes: string[];
+  teams: Record<string, Team>;
+  realStandings: TeamStanding[];
+  groupScores: GroupScores;
+  initialGroupScores: GroupScores;
+  matchSchedule: MatchInfo[];
+  onScoreChange: (matchKey: string, side: 'home' | 'away', value: string) => void;
+}) {
+  const isSimulated = groupIsModified(groupScores, initialGroupScores);
+  const hasAnyScore = Object.values(groupScores).some(s => s.home !== '' || s.away !== '');
+  const standings = hasAnyScore
+    ? computeStandings(teamCodes, groupScores)
+    : realStandings;
+  // Use scheduled order when available, fall back to generated pairs
+  const matches: { home: string; away: string; date?: string }[] =
+    matchSchedule.length > 0 ? matchSchedule : roundRobinMatches(teamCodes).map(([h, a]) => ({ home: h, away: a }));
+
+  return (
+    <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
+      {/* Header */}
+      <div className="bg-green-800 px-3 py-1.5 flex items-center justify-between">
+        <h2 className="font-bold text-white tracking-wide">Group {label}</h2>
+        {isSimulated ? (
+          <span className="text-xs font-semibold bg-amber-500 text-gray-950 px-2 py-0.5 rounded-full">
+            SIM
+          </span>
+        ) : (
+          <span className="text-xs font-semibold bg-green-500/30 text-green-300 px-2 py-0.5 rounded-full">
+            LIVE
+          </span>
+        )}
+      </div>
+
+      <div className="flex p-2 gap-2">
+        {/* Standings */}
+        <div className="flex-1 min-w-0">
+          <StandingsTable standings={standings} teams={teams} />
+        </div>
+
+        {/* Divider */}
+        <div className="w-px bg-gray-800 shrink-0" />
+
+        {/* Matches with score inputs */}
+        <div className="flex flex-col gap-1.5 shrink-0">
+          {matches.map(({ home, away, date }) => {
+            const key = `${home}-${away}`;
+            const score = groupScores[key] ?? { home: '', away: '' };
+            return (
+              <div key={key} className="flex items-center gap-1.5">
+                {date && (
+                  <span className="text-gray-600 text-[10px] w-12 shrink-0 text-right">
+                    {formatMatchDate(date)}
+                  </span>
+                )}
+                <Flag code={home} />
+                <ScoreInput
+                  value={score.home}
+                  onChange={(v) => onScoreChange(key, 'home', v)}
+                />
+                <span className="text-gray-600 text-xs select-none">·</span>
+                <ScoreInput
+                  value={score.away}
+                  onChange={(v) => onScoreChange(key, 'away', v)}
+                />
+                <Flag code={away} />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Main export ────────────────────────────────────────────────────────────
+
+export function GroupStageSimulator({
+  groups,
+  teams,
+  realStandings,
+  initialScores,
+  matchSchedule,
+}: {
+  groups: Record<string, string[]>;
+  teams: Record<string, Team>;
+  realStandings: Record<string, TeamStanding[]>;
+  initialScores: Record<string, GroupScores>;
+  matchSchedule: Record<string, MatchInfo[]>;
+}) {
+  const [scores, setScores] = useState<AllScores>(initialScores);
+
+  const hasAnySimulation = Object.keys(groups).some((label) =>
+    groupIsModified(scores[label] ?? {}, initialScores[label] ?? {}),
+  );
+
+  function handleReset() {
+    setScores(initialScores);
+  }
+
+  function handleScoreChange(
+    group: string,
+    matchKey: string,
+    side: 'home' | 'away',
+    value: string,
+  ) {
+    setScores((prev) => ({
+      ...prev,
+      [group]: {
+        ...prev[group],
+        [matchKey]: {
+          ...(prev[group]?.[matchKey] ?? { home: '', away: '' }),
+          [side]: value,
+        },
+      },
+    }));
+  }
+
+  const sortedGroups = Object.entries(groups).sort(([a], [b]) =>
+    a.localeCompare(b),
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-950 text-white">
+      {/* Sticky top bar */}
+      <header className="sticky top-0 z-10 bg-gray-950/95 backdrop-blur border-b border-gray-800 px-6 py-3 flex items-center justify-between">
+        <h1 className="text-base font-bold tracking-tight">
+          FIFA World Cup 2026 — Group Stage Simulator
+        </h1>
+        <button
+          onClick={handleReset}
+          disabled={!hasAnySimulation}
+          className="text-sm px-4 py-1.5 rounded-full border border-gray-600 text-gray-300 transition-all
+            enabled:hover:border-white enabled:hover:text-white enabled:cursor-pointer
+            disabled:opacity-30 disabled:cursor-default"
+        >
+          Reset to current standings
+        </button>
+      </header>
+
+      {/* Groups grid */}
+      <div className="max-w-[1400px] mx-auto px-2 py-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+          {sortedGroups.map(([label, teamCodes]) => {
+            const fallback: TeamStanding[] =
+              realStandings[label] ??
+              teamCodes.map((code) => ({
+                teamCode: code, played: 0, won: 0, drawn: 0, lost: 0,
+                goalsFor: 0, goalsAgainst: 0, goalDifference: 0, points: 0,
+              }));
+
+            return (
+              <GroupCard
+                key={label}
+                label={label}
+                teamCodes={teamCodes}
+                teams={teams}
+                realStandings={fallback}
+                groupScores={scores[label] ?? {}}
+                initialGroupScores={initialScores[label] ?? {}}
+                matchSchedule={matchSchedule[label] ?? []}
+                onScoreChange={(matchKey, side, value) =>
+                  handleScoreChange(label, matchKey, side, value)
+                }
+              />
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}

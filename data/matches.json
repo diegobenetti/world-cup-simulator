@@ -1,0 +1,530 @@
+{
+  "A": [
+    {
+      "home": "MEX",
+      "away": "RSA",
+      "date": "2026-06-11T19:00:00Z",
+      "homeScore": 2,
+      "awayScore": 0
+    },
+    {
+      "home": "KOR",
+      "away": "CZE",
+      "date": "2026-06-12T02:00:00Z",
+      "homeScore": 2,
+      "awayScore": 1
+    },
+    {
+      "home": "CZE",
+      "away": "RSA",
+      "date": "2026-06-18T16:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "MEX",
+      "away": "KOR",
+      "date": "2026-06-19T01:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "KOR",
+      "away": "RSA",
+      "date": "2026-06-25T01:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "MEX",
+      "away": "CZE",
+      "date": "2026-06-25T01:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ],
+  "B": [
+    {
+      "home": "CAN",
+      "away": "BIH",
+      "date": "2026-06-12T19:00:00Z",
+      "homeScore": 1,
+      "awayScore": 1
+    },
+    {
+      "home": "SUI",
+      "away": "QAT",
+      "date": "2026-06-13T19:00:00Z",
+      "homeScore": 1,
+      "awayScore": 1
+    },
+    {
+      "home": "SUI",
+      "away": "BIH",
+      "date": "2026-06-18T19:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "CAN",
+      "away": "QAT",
+      "date": "2026-06-18T22:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "QAT",
+      "away": "BIH",
+      "date": "2026-06-24T19:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "SUI",
+      "away": "CAN",
+      "date": "2026-06-24T19:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ],
+  "D": [
+    {
+      "home": "USA",
+      "away": "PAR",
+      "date": "2026-06-13T01:00:00Z",
+      "homeScore": 4,
+      "awayScore": 1
+    },
+    {
+      "home": "TUR",
+      "away": "AUS",
+      "date": "2026-06-14T04:00:00Z",
+      "homeScore": 0,
+      "awayScore": 0
+    },
+    {
+      "home": "USA",
+      "away": "AUS",
+      "date": "2026-06-19T19:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "TUR",
+      "away": "PAR",
+      "date": "2026-06-20T03:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "AUS",
+      "away": "PAR",
+      "date": "2026-06-26T02:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "USA",
+      "away": "TUR",
+      "date": "2026-06-26T02:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ],
+  "C": [
+    {
+      "home": "MAR",
+      "away": "BRA",
+      "date": "2026-06-13T22:00:00Z",
+      "homeScore": 1,
+      "awayScore": 1
+    },
+    {
+      "home": "SCO",
+      "away": "HAI",
+      "date": "2026-06-14T01:00:00Z",
+      "homeScore": 1,
+      "awayScore": 0
+    },
+    {
+      "home": "SCO",
+      "away": "MAR",
+      "date": "2026-06-19T22:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "BRA",
+      "away": "HAI",
+      "date": "2026-06-20T00:30:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "MAR",
+      "away": "HAI",
+      "date": "2026-06-24T22:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "SCO",
+      "away": "BRA",
+      "date": "2026-06-24T22:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ],
+  "E": [
+    {
+      "home": "GER",
+      "away": "CUW",
+      "date": "2026-06-14T17:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "CIV",
+      "away": "ECU",
+      "date": "2026-06-14T23:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "GER",
+      "away": "CIV",
+      "date": "2026-06-20T20:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "CUW",
+      "away": "ECU",
+      "date": "2026-06-21T00:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "CUW",
+      "away": "CIV",
+      "date": "2026-06-25T20:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "GER",
+      "away": "ECU",
+      "date": "2026-06-25T20:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ],
+  "F": [
+    {
+      "home": "NED",
+      "away": "JPN",
+      "date": "2026-06-14T20:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "SWE",
+      "away": "TUN",
+      "date": "2026-06-15T02:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "NED",
+      "away": "SWE",
+      "date": "2026-06-20T17:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "JPN",
+      "away": "TUN",
+      "date": "2026-06-21T04:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "NED",
+      "away": "TUN",
+      "date": "2026-06-25T23:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "JPN",
+      "away": "SWE",
+      "date": "2026-06-25T23:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ],
+  "H": [
+    {
+      "home": "ESP",
+      "away": "CPV",
+      "date": "2026-06-15T16:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "KSA",
+      "away": "URU",
+      "date": "2026-06-15T22:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "ESP",
+      "away": "KSA",
+      "date": "2026-06-21T16:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "CPV",
+      "away": "URU",
+      "date": "2026-06-21T22:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "ESP",
+      "away": "URU",
+      "date": "2026-06-27T00:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "CPV",
+      "away": "KSA",
+      "date": "2026-06-27T00:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ],
+  "G": [
+    {
+      "home": "BEL",
+      "away": "EGY",
+      "date": "2026-06-15T19:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "IRN",
+      "away": "NZL",
+      "date": "2026-06-16T01:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "BEL",
+      "away": "IRN",
+      "date": "2026-06-21T19:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "EGY",
+      "away": "NZL",
+      "date": "2026-06-22T01:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "BEL",
+      "away": "NZL",
+      "date": "2026-06-27T03:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "EGY",
+      "away": "IRN",
+      "date": "2026-06-27T03:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ],
+  "I": [
+    {
+      "home": "FRA",
+      "away": "SEN",
+      "date": "2026-06-16T19:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "IRQ",
+      "away": "NOR",
+      "date": "2026-06-16T22:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "FRA",
+      "away": "IRQ",
+      "date": "2026-06-22T21:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "SEN",
+      "away": "NOR",
+      "date": "2026-06-23T00:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "SEN",
+      "away": "IRQ",
+      "date": "2026-06-26T19:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "FRA",
+      "away": "NOR",
+      "date": "2026-06-26T19:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ],
+  "J": [
+    {
+      "home": "ARG",
+      "away": "ALG",
+      "date": "2026-06-17T01:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "AUT",
+      "away": "JOR",
+      "date": "2026-06-17T04:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "ARG",
+      "away": "AUT",
+      "date": "2026-06-22T17:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "ALG",
+      "away": "JOR",
+      "date": "2026-06-23T03:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "ALG",
+      "away": "AUT",
+      "date": "2026-06-28T02:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "ARG",
+      "away": "JOR",
+      "date": "2026-06-28T02:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ],
+  "K": [
+    {
+      "home": "POR",
+      "away": "COD",
+      "date": "2026-06-17T17:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "UZB",
+      "away": "COL",
+      "date": "2026-06-18T02:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "POR",
+      "away": "UZB",
+      "date": "2026-06-23T17:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "COD",
+      "away": "COL",
+      "date": "2026-06-24T02:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "COD",
+      "away": "UZB",
+      "date": "2026-06-27T23:30:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "POR",
+      "away": "COL",
+      "date": "2026-06-27T23:30:00Z",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ],
+  "L": [
+    {
+      "home": "ENG",
+      "away": "CRO",
+      "date": "2026-06-17T20:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "GHA",
+      "away": "PAN",
+      "date": "2026-06-17T23:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "ENG",
+      "away": "GHA",
+      "date": "2026-06-23T20:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "CRO",
+      "away": "PAN",
+      "date": "2026-06-23T23:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "ENG",
+      "away": "PAN",
+      "date": "2026-06-27T21:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    },
+    {
+      "home": "CRO",
+      "away": "GHA",
+      "date": "2026-06-27T21:00:00Z",
+      "homeScore": null,
+      "awayScore": null
+    }
+  ]
+}

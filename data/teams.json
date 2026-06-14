@@ -1,0 +1,242 @@
+{
+  "ARG": {
+    "name": "Argentina",
+    "code": "ARG",
+    "flagPath": "data/flags/ARG.png"
+  },
+  "BEL": {
+    "name": "Belgium",
+    "code": "BEL",
+    "flagPath": "data/flags/BEL.png"
+  },
+  "ENG": {
+    "name": "England",
+    "code": "ENG",
+    "flagPath": "data/flags/ENG.png"
+  },
+  "FRA": {
+    "name": "France",
+    "code": "FRA",
+    "flagPath": "data/flags/FRA.png"
+  },
+  "GER": {
+    "name": "Germany",
+    "code": "GER",
+    "flagPath": "data/flags/GER.png"
+  },
+  "MEX": {
+    "name": "Mexico",
+    "code": "MEX",
+    "flagPath": "data/flags/MEX.png"
+  },
+  "NED": {
+    "name": "Netherlands",
+    "code": "NED",
+    "flagPath": "data/flags/NED.png"
+  },
+  "POR": {
+    "name": "Portugal",
+    "code": "POR",
+    "flagPath": "data/flags/POR.png"
+  },
+  "SCO": {
+    "name": "Scotland",
+    "code": "SCO",
+    "flagPath": "data/flags/SCO.png"
+  },
+  "ESP": {
+    "name": "Spain",
+    "code": "ESP",
+    "flagPath": "data/flags/ESP.png"
+  },
+  "SUI": {
+    "name": "Switzerland",
+    "code": "SUI",
+    "flagPath": "data/flags/SUI.png"
+  },
+  "USA": {
+    "name": "USA",
+    "code": "USA",
+    "flagPath": "data/flags/USA.png"
+  },
+  "ALG": {
+    "name": "Algeria",
+    "code": "ALG",
+    "flagPath": "data/flags/ALG.png"
+  },
+  "CPV": {
+    "name": "Cabo Verde",
+    "code": "CPV",
+    "flagPath": "data/flags/CPV.png"
+  },
+  "COD": {
+    "name": "Congo DR",
+    "code": "COD",
+    "flagPath": "data/flags/COD.png"
+  },
+  "CRO": {
+    "name": "Croatia",
+    "code": "CRO",
+    "flagPath": "data/flags/CRO.png"
+  },
+  "CUW": {
+    "name": "Curaçao",
+    "code": "CUW",
+    "flagPath": "data/flags/CUW.png"
+  },
+  "EGY": {
+    "name": "Egypt",
+    "code": "EGY",
+    "flagPath": "data/flags/EGY.png"
+  },
+  "JPN": {
+    "name": "Japan",
+    "code": "JPN",
+    "flagPath": "data/flags/JPN.png"
+  },
+  "SEN": {
+    "name": "Senegal",
+    "code": "SEN",
+    "flagPath": "data/flags/SEN.png"
+  },
+  "AUT": {
+    "name": "Austria",
+    "code": "AUT",
+    "flagPath": "data/flags/AUT.png"
+  },
+  "CIV": {
+    "name": "Côte d'Ivoire",
+    "code": "CIV",
+    "flagPath": "data/flags/CIV.png"
+  },
+  "GHA": {
+    "name": "Ghana",
+    "code": "GHA",
+    "flagPath": "data/flags/GHA.png"
+  },
+  "IRN": {
+    "name": "IR Iran",
+    "code": "IRN",
+    "flagPath": "data/flags/IRN.png"
+  },
+  "IRQ": {
+    "name": "Iraq",
+    "code": "IRQ",
+    "flagPath": "data/flags/IRQ.png"
+  },
+  "KSA": {
+    "name": "Saudi Arabia",
+    "code": "KSA",
+    "flagPath": "data/flags/KSA.png"
+  },
+  "SWE": {
+    "name": "Sweden",
+    "code": "SWE",
+    "flagPath": "data/flags/SWE.png"
+  },
+  "UZB": {
+    "name": "Uzbekistan",
+    "code": "UZB",
+    "flagPath": "data/flags/UZB.png"
+  },
+  "COL": {
+    "name": "Colombia",
+    "code": "COL",
+    "flagPath": "data/flags/COL.png"
+  },
+  "ECU": {
+    "name": "Ecuador",
+    "code": "ECU",
+    "flagPath": "data/flags/ECU.png"
+  },
+  "JOR": {
+    "name": "Jordan",
+    "code": "JOR",
+    "flagPath": "data/flags/JOR.png"
+  },
+  "NZL": {
+    "name": "New Zealand",
+    "code": "NZL",
+    "flagPath": "data/flags/NZL.png"
+  },
+  "NOR": {
+    "name": "Norway",
+    "code": "NOR",
+    "flagPath": "data/flags/NOR.png"
+  },
+  "PAN": {
+    "name": "Panama",
+    "code": "PAN",
+    "flagPath": "data/flags/PAN.png"
+  },
+  "TUN": {
+    "name": "Tunisia",
+    "code": "TUN",
+    "flagPath": "data/flags/TUN.png"
+  },
+  "URU": {
+    "name": "Uruguay",
+    "code": "URU",
+    "flagPath": "data/flags/URU.png"
+  },
+  "CAN": {
+    "name": "Canada",
+    "code": "CAN",
+    "flagPath": "data/flags/CAN.png"
+  },
+  "KOR": {
+    "name": "Korea Republic",
+    "code": "KOR",
+    "flagPath": "data/flags/KOR.png"
+  },
+  "MAR": {
+    "name": "Morocco",
+    "code": "MAR",
+    "flagPath": "data/flags/MAR.png"
+  },
+  "TUR": {
+    "name": "Türkiye",
+    "code": "TUR",
+    "flagPath": "data/flags/TUR.png"
+  },
+  "AUS": {
+    "name": "Australia",
+    "code": "AUS",
+    "flagPath": "data/flags/AUS.png"
+  },
+  "BRA": {
+    "name": "Brazil",
+    "code": "BRA",
+    "flagPath": "data/flags/BRA.png"
+  },
+  "CZE": {
+    "name": "Czechia",
+    "code": "CZE",
+    "flagPath": "data/flags/CZE.png"
+  },
+  "QAT": {
+    "name": "Qatar",
+    "code": "QAT",
+    "flagPath": "data/flags/QAT.png"
+  },
+  "BIH": {
+    "name": "Bosnia",
+    "code": "BIH",
+    "flagPath": "data/flags/BIH.png"
+  },
+  "HAI": {
+    "name": "Haiti",
+    "code": "HAI",
+    "flagPath": "data/flags/HAI.png"
+  },
+  "PAR": {
+    "name": "Paraguay",
+    "code": "PAR",
+    "flagPath": "data/flags/PAR.png"
+  },
+  "RSA": {
+    "name": "South Africa",
+    "code": "RSA",
+    "flagPath": "data/flags/RSA.png"
+  }
+}
