@@ -235,41 +235,48 @@ function GroupCard({
         )}
       </div>
 
-      <div className="flex p-2 gap-1">
+      <div className="p-2">
         {/* Standings */}
-        <div className="flex-1 min-w-0">
-          <StandingsTable standings={standings} teams={teams} />
-        </div>
+        <StandingsTable standings={standings} teams={teams} />
 
         {/* Divider */}
-        <div className="w-px bg-gray-800 shrink-0" />
+        <div className="h-px bg-gray-800 my-1.5" />
 
-        {/* Matches with score inputs */}
-        <div className="flex flex-col gap-1.5 shrink-0">
-          {matches.map(({ home, away, date }) => {
-            const key = `${home}-${away}`;
-            const score = groupScores[key] ?? { home: '', away: '' };
-            return (
-              <div key={key} className="flex items-center gap-1.5">
-                {date && (
-                  <span className="text-gray-600 text-[10px] w-12 shrink-0 text-right">
-                    {formatMatchDate(date)}
-                  </span>
-                )}
-                <Flag code={home} />
-                <ScoreInput
-                  value={score.home}
-                  onChange={(v) => onScoreChange(key, 'home', v)}
-                />
-                <span className="text-gray-600 text-xs select-none">·</span>
-                <ScoreInput
-                  value={score.away}
-                  onChange={(v) => onScoreChange(key, 'away', v)}
-                />
-                <Flag code={away} />
-              </div>
-            );
-          })}
+        {/* Matches in two columns of three */}
+        <div className="flex justify-between gap-2">
+          {[matches.slice(0, 3), matches.slice(3)].map((col, colIdx) => (
+            <div key={colIdx} className="flex flex-col gap-1">
+              {col.map(({ home, away, date }) => {
+                const key = `${home}-${away}`;
+                const score = groupScores[key] ?? { home: '', away: '' };
+                return (
+                  <div key={key} className="flex items-center gap-1.5">
+                    {date && colIdx === 1 && (
+                      <span className="text-gray-600 text-[10px] w-12 shrink-0 text-right">
+                        {formatMatchDate(date)}
+                      </span>
+                    )}
+                    <Flag code={home} />
+                    <ScoreInput
+                      value={score.home}
+                      onChange={(v) => onScoreChange(key, 'home', v)}
+                    />
+                    <span className="text-gray-600 text-xs select-none">·</span>
+                    <ScoreInput
+                      value={score.away}
+                      onChange={(v) => onScoreChange(key, 'away', v)}
+                    />
+                    <Flag code={away} />
+                    {date && colIdx === 0 && (
+                      <span className="text-gray-600 text-[10px] w-12 shrink-0">
+                        {formatMatchDate(date)}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -342,8 +349,8 @@ export function GroupStageSimulator({
       </header>
 
       {/* Groups grid */}
-      <div className="max-w-[1400px] mx-auto px-2 py-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+      <div className="max-w-[1400px] mx-auto px-2 pt-3 pb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
           {sortedGroups.map(([label, teamCodes]) => {
             const fallback: TeamStanding[] =
               realStandings[label] ??
