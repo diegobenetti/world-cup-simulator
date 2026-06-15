@@ -82,6 +82,7 @@ interface FifaMatchEntry {
   IdGroup: string;
   Home: FifaMatchTeam;
   Away: FifaMatchTeam;
+  Date: string;
   HomeTeamScore: number | null;
   AwayTeamScore: number | null;
 }

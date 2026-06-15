@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { KnockoutBracket } from './KnockoutBracket';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -330,6 +331,21 @@ export function GroupStageSimulator({
     a.localeCompare(b),
   );
 
+  const currentStandings = useMemo(() => {
+    const result: Record<string, TeamStanding[]> = {};
+    for (const [label, teamCodes] of Object.entries(groups)) {
+      const gs = scores[label] ?? {};
+      const hasUserScore = Object.values(gs).some(s => s.home !== '' || s.away !== '');
+      if (hasUserScore) {
+        result[label] = computeStandings(teamCodes, gs);
+      } else {
+        const real = realStandings[label];
+        if (real?.some(r => r.played > 0)) result[label] = real;
+      }
+    }
+    return result;
+  }, [groups, scores, realStandings]);
+
   return (
     <div className="min-h-screen bg-gray-950 text-white">
       {/* Sticky top bar */}
@@ -349,7 +365,7 @@ export function GroupStageSimulator({
       </header>
 
       {/* Groups grid */}
-      <div className="max-w-[1400px] mx-auto px-2 pt-3 pb-10">
+      <div className="max-w-[1400px] mx-auto px-2 pt-3 pb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
           {sortedGroups.map(([label, teamCodes]) => {
             const fallback: TeamStanding[] =
@@ -376,6 +392,14 @@ export function GroupStageSimulator({
             );
           })}
         </div>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-gray-800 mx-2" />
+
+      {/* Knockout Bracket */}
+      <div className="pt-6">
+        <KnockoutBracket teams={teams} currentStandings={currentStandings} />
       </div>
     </div>
   );
