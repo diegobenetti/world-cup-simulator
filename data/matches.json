@@ -100,7 +100,7 @@
       "away": "AUS",
       "date": "2026-06-14T04:00:00Z",
       "homeScore": 0,
-      "awayScore": 0
+      "awayScore": 2
     },
     {
       "home": "USA",
@@ -180,15 +180,15 @@
       "home": "GER",
       "away": "CUW",
       "date": "2026-06-14T17:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 7,
+      "awayScore": 1
     },
     {
       "home": "CIV",
       "away": "ECU",
       "date": "2026-06-14T23:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 1,
+      "awayScore": 0
     },
     {
       "home": "GER",
@@ -224,15 +224,15 @@
       "home": "NED",
       "away": "JPN",
       "date": "2026-06-14T20:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 2,
+      "awayScore": 2
     },
     {
       "home": "SWE",
       "away": "TUN",
       "date": "2026-06-15T02:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 5,
+      "awayScore": 1
     },
     {
       "home": "NED",
@@ -268,15 +268,15 @@
       "home": "ESP",
       "away": "CPV",
       "date": "2026-06-15T16:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 0,
+      "awayScore": 0
     },
     {
       "home": "KSA",
       "away": "URU",
       "date": "2026-06-15T22:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 1,
+      "awayScore": 1
     },
     {
       "home": "ESP",
@@ -312,15 +312,15 @@
       "home": "BEL",
       "away": "EGY",
       "date": "2026-06-15T19:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 1,
+      "awayScore": 1
     },
     {
       "home": "IRN",
       "away": "NZL",
       "date": "2026-06-16T01:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 2,
+      "awayScore": 2
     },
     {
       "home": "BEL",
@@ -356,15 +356,15 @@
       "home": "FRA",
       "away": "SEN",
       "date": "2026-06-16T19:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 3,
+      "awayScore": 1
     },
     {
       "home": "IRQ",
       "away": "NOR",
       "date": "2026-06-16T22:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 1,
+      "awayScore": 4
     },
     {
       "home": "FRA",
@@ -400,15 +400,15 @@
       "home": "ARG",
       "away": "ALG",
       "date": "2026-06-17T01:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 3,
+      "awayScore": 0
     },
     {
       "home": "AUT",
       "away": "JOR",
       "date": "2026-06-17T04:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 3,
+      "awayScore": 1
     },
     {
       "home": "ARG",
@@ -444,8 +444,8 @@
       "home": "POR",
       "away": "COD",
       "date": "2026-06-17T17:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 1,
+      "awayScore": 1
     },
     {
       "home": "UZB",
@@ -488,15 +488,15 @@
       "home": "ENG",
       "away": "CRO",
       "date": "2026-06-17T20:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 4,
+      "awayScore": 2
     },
     {
       "home": "GHA",
       "away": "PAN",
       "date": "2026-06-17T23:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 0,
+      "awayScore": 0
     },
     {
       "home": "ENG",

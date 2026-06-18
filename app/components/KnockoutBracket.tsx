@@ -5,10 +5,11 @@ import type { Team, TeamStanding } from './GroupStageSimulator';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
-const CELL = 82;           // px per R32 row slot — must be ≥ natural card height
-const HALF_H = 8 * CELL;  // height of each bracket half
-const COL_W = 148;         // match card column width  (9 cols × 148 + 8 gaps × 6 = 1380px ≤ 1384px available)
-const COL_GAP = 6;         // gap between round columns
+const CELL = 86;              // px per R32 row slot — drives R16/QF/SF spacing
+const HALF_H = 8 * CELL;     // height of each bracket half
+const COL_W = 148;            // match card column width
+const COL_GAP = 6;            // gap between round columns
+const R32_PAD = 5;            // px from slot edge to card for R32 pair-mates; inner gap = 2×R32_PAD
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -137,11 +138,18 @@ function MatchCard({
 
   function Row({ team, slot, score, side, win }: { team: string | null; slot: string; score: string; side: 'a' | 'b'; win: boolean }) {
     return (
-      <div className={`flex items-center gap-1 ${win ? 'text-white' : 'text-gray-400'}`}>
+      <div className={`flex items-center gap-1 min-h-[20px] ${win ? 'text-white' : 'text-gray-400'}`}>
         {team ? <KOFlag code={team} /> : <div className="w-5 h-[14px] bg-gray-800 rounded-sm shrink-0" />}
-        <span className="flex-1 text-[10px] truncate leading-none">
-          {team ? (teams[team]?.name ?? team) : <span className="text-gray-600 font-mono">{slot}</span>}
-        </span>
+        <div className="flex-1 min-w-0 min-h-[20px] flex flex-col justify-center">
+          {team ? (
+            <>
+              <div className="text-[10px] truncate leading-none">{teams[team]?.name ?? team}</div>
+              <div className="text-[8px] font-mono text-gray-600 leading-none mt-[2px]">{slot}</div>
+            </>
+          ) : (
+            <span className="text-gray-600 font-mono text-[10px] leading-none">{slot}</span>
+          )}
+        </div>
         <input
           type="text" inputMode="numeric" maxLength={2}
           value={score} placeholder="–"
@@ -186,11 +194,26 @@ function HalfBracket({
 
         return (
           <div key={colIdx} className="relative shrink-0" style={{ width: COL_W, height: HALF_H }}>
-            {round.map((match, mIdx) => (
-              <div key={match.n} className="absolute flex items-center" style={{ top: mIdx * rowSpan * CELL, height: rowSpan * CELL, left: 0, right: 0 }}>
-                <MatchCard match={match} teams={teams} standings={standings} kScores={kScores} onScore={onScore} />
-              </div>
-            ))}
+            {round.map((match, mIdx) => {
+              const isR32 = rowSpan === 1;
+              // R32: anchor top-of-pair card to slot bottom, bottom-of-pair card to slot top.
+              // Inner gap = 2×R32_PAD, independent of card height.
+              const className = isR32
+                ? `absolute flex flex-col ${mIdx % 2 === 0 ? 'justify-end' : 'justify-start'}`
+                : 'absolute flex items-center';
+              const style = {
+                top: mIdx * rowSpan * CELL,
+                height: rowSpan * CELL,
+                left: 0, right: 0,
+                ...(isR32 && mIdx % 2 === 0 ? { paddingBottom: R32_PAD } : {}),
+                ...(isR32 && mIdx % 2 !== 0 ? { paddingTop: R32_PAD } : {}),
+              };
+              return (
+                <div key={match.n} className={className} style={style}>
+                  <MatchCard match={match} teams={teams} standings={standings} kScores={kScores} onScore={onScore} />
+                </div>
+              );
+            })}
           </div>
         );
       })}
