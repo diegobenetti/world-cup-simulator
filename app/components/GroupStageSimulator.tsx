@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { KnockoutBracket } from './KnockoutBracket';
+import { KnockoutBracket, getThirdPlaceRanking, allocateThirdPlaces } from './KnockoutBracket';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -189,6 +189,94 @@ function StandingsTable({
         })}
       </tbody>
     </table>
+  );
+}
+
+function ThirdPlaceRanking({
+  standings,
+  teams,
+}: {
+  standings: Record<string, TeamStanding[]>;
+  teams: Record<string, Team>;
+}) {
+  const ranked = getThirdPlaceRanking(standings);
+  const allocation = allocateThirdPlaces(standings);
+  if (ranked.length === 0) return null;
+
+  return (
+    <div className="max-w-[700px] mx-auto px-2 pb-6">
+      <h2 className="text-base font-bold tracking-tight text-white mb-3">Best Third-Place Teams</h2>
+      <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+        <table className="w-full text-xs">
+          <thead>
+            <tr className="text-gray-500 text-[10px] uppercase tracking-wider">
+              <th className="text-center py-2 w-7 font-medium">#</th>
+              <th className="text-center py-2 w-8 font-medium">Grp</th>
+              <th className="text-left py-2 pl-2 font-medium">Team</th>
+              <th className="text-center py-2 w-7 font-medium">P</th>
+              <th className="text-center py-2 w-7 font-medium">W</th>
+              <th className="text-center py-2 w-7 font-medium">D</th>
+              <th className="text-center py-2 w-7 font-medium">L</th>
+              <th className="text-center py-2 w-10 font-medium">GD</th>
+              <th className="text-center py-2 w-10 font-medium">Pts</th>
+              <th className="text-center py-2 w-14 font-medium">Slot</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ranked.flatMap(({ group, ts }, i) => {
+              const rank = i + 1;
+              const qualifies = rank <= 8;
+              const matchNumber = qualifies ? allocation[group] : undefined;
+              const team = teams[ts.teamCode];
+              const rows = [];
+
+              if (rank === 9) {
+                rows.push(
+                  <tr key="sep">
+                    <td colSpan={10} className="text-center text-[9px] text-gray-500 uppercase tracking-wider py-1.5 border-t border-gray-700 bg-gray-800/40">
+                      eliminated
+                    </td>
+                  </tr>
+                );
+              }
+
+              rows.push(
+                <tr
+                  key={group}
+                  className={`border-t border-gray-800/50 ${qualifies ? 'text-white' : 'text-gray-600'}`}
+                >
+                  <td className="text-center py-1.5 text-gray-500">{rank}</td>
+                  <td className="text-center py-1.5 font-mono font-bold text-gray-400">{group}</td>
+                  <td className="py-1.5 pl-2">
+                    <div className="flex items-center gap-1.5">
+                      <Flag code={ts.teamCode} size="sm" />
+                      <span className="truncate">{team?.name ?? ts.teamCode}</span>
+                    </div>
+                  </td>
+                  <td className="text-center py-1.5">{ts.played}</td>
+                  <td className="text-center py-1.5">{ts.won}</td>
+                  <td className="text-center py-1.5">{ts.drawn}</td>
+                  <td className="text-center py-1.5">{ts.lost}</td>
+                  <td className="text-center py-1.5">
+                    {ts.goalDifference > 0 ? `+${ts.goalDifference}` : ts.goalDifference}
+                  </td>
+                  <td className="text-center py-1.5 font-bold">{ts.points}</td>
+                  <td className="text-center py-1.5">
+                    {matchNumber ? (
+                      <span className="font-mono text-green-400">M{matchNumber}</span>
+                    ) : (
+                      <span className="text-gray-700">—</span>
+                    )}
+                  </td>
+                </tr>
+              );
+
+              return rows;
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
 
@@ -392,6 +480,14 @@ export function GroupStageSimulator({
             );
           })}
         </div>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-gray-800 mx-2" />
+
+      {/* Third-place ranking */}
+      <div className="pt-6">
+        <ThirdPlaceRanking standings={currentStandings} teams={teams} />
       </div>
 
       {/* Divider */}

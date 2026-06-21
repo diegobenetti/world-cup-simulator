@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { Team, TeamStanding } from './GroupStageSimulator';
 
 // ── Constants ──────────────────────────────────────────────────────────────
@@ -10,6 +10,18 @@ const HALF_H = 8 * CELL;     // height of each bracket half
 const COL_W = 148;            // match card column width
 const COL_GAP = 6;            // gap between round columns
 const R32_PAD = 5;            // px from slot edge to card for R32 pair-mates; inner gap = 2×R32_PAD
+
+// Each R32 third-place slot maps to the eligible groups for that match.
+export const THIRD_SLOTS: Record<number, string[]> = {
+  74: ['A','B','C','D','F'],
+  77: ['C','D','F','G','H'],
+  79: ['C','E','F','H','I'],
+  80: ['E','H','I','J','K'],
+  81: ['B','E','F','I','J'],
+  82: ['A','E','H','I','J'],
+  85: ['E','F','G','I','J'],
+  87: ['D','E','I','J','L'],
+};
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -75,23 +87,68 @@ for (const half of [LEFT, RIGHT]) for (const round of half) for (const m of roun
 MATCH_SLOTS[FINAL.n] = { a: FINAL.a, b: FINAL.b };
 MATCH_SLOTS[THIRD.n] = { a: THIRD.a, b: THIRD.b };
 
-function resolveThirdSlot(eligible: string[], standings: Record<string, TeamStanding[]>): string | null {
-  const thirds: { group: string; ts: TeamStanding }[] = [];
-  for (const [g, rows] of Object.entries(standings))
-    if (rows.length >= 3) thirds.push({ group: g, ts: rows[2] });
-  thirds.sort((a, b) =>
-    b.ts.points - a.ts.points || b.ts.goalDifference - a.ts.goalDifference || b.ts.goalsFor - a.ts.goalsFor,
-  );
-  const top8 = new Set(thirds.slice(0, 8).map(t => t.group));
-  const hits = thirds.filter(t => eligible.includes(t.group) && top8.has(t.group));
-  return hits.length === 1 ? hits[0].ts.teamCode : null;
+export function getThirdPlaceRanking(
+  standings: Record<string, TeamStanding[]>,
+): { group: string; ts: TeamStanding }[] {
+  return Object.entries(standings)
+    .filter(([, rows]) => rows.length >= 3)
+    .map(([group, rows]) => ({ group, ts: rows[2] }))
+    .sort((a, b) =>
+      b.ts.points - a.ts.points ||
+      b.ts.goalDifference - a.ts.goalDifference ||
+      b.ts.goalsFor - a.ts.goalsFor,
+    );
 }
 
-function resolveTeam(slot: string, standings: Record<string, TeamStanding[]>, kScores: KScores, depth = 0): string | null {
+// Bipartite matching: assigns each top-8 third-place group to one eligible slot.
+// Returns { group → matchNumber }.
+export function allocateThirdPlaces(
+  standings: Record<string, TeamStanding[]>,
+): Record<string, number> {
+  const top8 = getThirdPlaceRanking(standings).slice(0, 8);
+  const slotToGroup: Record<number, string> = {};
+
+  function augment(group: string, visited: Set<number>): boolean {
+    for (const [slotStr, groups] of Object.entries(THIRD_SLOTS)) {
+      const slot = parseInt(slotStr);
+      if (!groups.includes(group) || visited.has(slot)) continue;
+      visited.add(slot);
+      const current = slotToGroup[slot];
+      if (!current || augment(current, visited)) {
+        slotToGroup[slot] = group;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  for (const { group } of top8) augment(group, new Set());
+
+  const result: Record<string, number> = {};
+  for (const [slot, group] of Object.entries(slotToGroup)) result[group] = parseInt(slot);
+  return result;
+}
+
+function resolveThirdSlot(
+  eligible: string[],
+  standings: Record<string, TeamStanding[]>,
+  allocation: Record<string, number>,
+): string | null {
+  const eligibleSet = new Set(eligible);
+  const matchEntry = Object.entries(THIRD_SLOTS).find(
+    ([, groups]) => groups.length === eligible.length && groups.every(g => eligibleSet.has(g)),
+  );
+  if (!matchEntry) return null;
+  const matchNumber = parseInt(matchEntry[0]);
+  const group = Object.entries(allocation).find(([, n]) => n === matchNumber)?.[0];
+  return group ? (standings[group]?.[2]?.teamCode ?? null) : null;
+}
+
+function resolveTeam(slot: string, standings: Record<string, TeamStanding[]>, kScores: KScores, allocation: Record<string, number>, depth = 0): string | null {
   if (depth > 7) return null;
   const gp = slot.match(/^([12])([A-L])$/);
   if (gp) return standings[gp[2]]?.[parseInt(gp[1]) - 1]?.teamCode ?? null;
-  if (/^3[A-L]{2,}$/.test(slot)) return resolveThirdSlot(slot.slice(1).split(''), standings);
+  if (/^3[A-L]{2,}$/.test(slot)) return resolveThirdSlot(slot.slice(1).split(''), standings, allocation);
   const wm = slot.match(/^W(\d+)$/);
   if (wm) {
     const n = parseInt(wm[1]), sc = kScores[n];
@@ -99,7 +156,7 @@ function resolveTeam(slot: string, standings: Record<string, TeamStanding[]>, kS
     const sa = parseInt(sc.a), sb = parseInt(sc.b);
     if (isNaN(sa) || isNaN(sb) || sa === sb) return null;
     const ms = MATCH_SLOTS[n];
-    return ms ? resolveTeam(sa > sb ? ms.a : ms.b, standings, kScores, depth + 1) : null;
+    return ms ? resolveTeam(sa > sb ? ms.a : ms.b, standings, kScores, allocation, depth + 1) : null;
   }
   const ru = slot.match(/^RU(\d+)$/);
   if (ru) {
@@ -108,7 +165,7 @@ function resolveTeam(slot: string, standings: Record<string, TeamStanding[]>, kS
     const sa = parseInt(sc.a), sb = parseInt(sc.b);
     if (isNaN(sa) || isNaN(sb) || sa === sb) return null;
     const ms = MATCH_SLOTS[n];
-    return ms ? resolveTeam(sa > sb ? ms.b : ms.a, standings, kScores, depth + 1) : null;
+    return ms ? resolveTeam(sa > sb ? ms.b : ms.a, standings, kScores, allocation, depth + 1) : null;
   }
   return null;
 }
@@ -121,16 +178,17 @@ function KOFlag({ code }: { code: string }) {
 }
 
 function MatchCard({
-  match, teams, standings, kScores, onScore,
+  match, teams, standings, kScores, allocation, onScore,
 }: {
   match: BM;
   teams: Record<string, Team>;
   standings: Record<string, TeamStanding[]>;
   kScores: KScores;
+  allocation: Record<string, number>;
   onScore: (n: number, side: 'a' | 'b', v: string) => void;
 }) {
-  const tA = resolveTeam(match.a, standings, kScores);
-  const tB = resolveTeam(match.b, standings, kScores);
+  const tA = resolveTeam(match.a, standings, kScores, allocation);
+  const tB = resolveTeam(match.b, standings, kScores, allocation);
   const sc = kScores[match.n] ?? { a: '', b: '' };
   const sa = parseInt(sc.a), sb = parseInt(sc.b);
   const winA = !isNaN(sa) && !isNaN(sb) && sa > sb;
@@ -173,13 +231,14 @@ function MatchCard({
 // `halfRounds` must be in display order (outermost first for left, innermost first for right).
 // `outerIsR32` = true for left half, false for right half.
 function HalfBracket({
-  halfRounds, outerIsR32, teams, standings, kScores, onScore,
+  halfRounds, outerIsR32, teams, standings, kScores, allocation, onScore,
 }: {
   halfRounds: BM[][];
   outerIsR32: boolean;
   teams: Record<string, Team>;
   standings: Record<string, TeamStanding[]>;
   kScores: KScores;
+  allocation: Record<string, number>;
   onScore: (n: number, side: 'a' | 'b', v: string) => void;
 }) {
   const totalCols = halfRounds.length; // 4
@@ -210,7 +269,7 @@ function HalfBracket({
               };
               return (
                 <div key={match.n} className={className} style={style}>
-                  <MatchCard match={match} teams={teams} standings={standings} kScores={kScores} onScore={onScore} />
+                  <MatchCard match={match} teams={teams} standings={standings} kScores={kScores} allocation={allocation} onScore={onScore} />
                 </div>
               );
             })}
@@ -231,6 +290,7 @@ export function KnockoutBracket({
   currentStandings: Record<string, TeamStanding[]>;
 }) {
   const [kScores, setKScores] = useState<KScores>({});
+  const allocation = useMemo(() => allocateThirdPlaces(currentStandings), [currentStandings]);
 
   function handleScore(n: number, side: 'a' | 'b', v: string) {
     setKScores(prev => ({ ...prev, [n]: { ...(prev[n] ?? { a: '', b: '' }), [side]: v } }));
@@ -256,24 +316,24 @@ export function KnockoutBracket({
         <div className="flex" style={{ gap: COL_GAP, height: HALF_H }}>
           <HalfBracket
             halfRounds={LEFT} outerIsR32={true}
-            teams={teams} standings={currentStandings} kScores={kScores} onScore={handleScore}
+            teams={teams} standings={currentStandings} kScores={kScores} allocation={allocation} onScore={handleScore}
           />
 
           {/* Centre column: Final pinned just above mid, 3rd Place just below mid */}
           <div className="relative shrink-0" style={{ width: COL_W, height: HALF_H }}>
             <div className="absolute bottom-1/2 mb-1 w-full">
               <div className="text-[9px] text-gray-600 uppercase tracking-wider mb-1 text-center">Final</div>
-              <MatchCard match={FINAL} teams={teams} standings={currentStandings} kScores={kScores} onScore={handleScore} />
+              <MatchCard match={FINAL} teams={teams} standings={currentStandings} kScores={kScores} allocation={allocation} onScore={handleScore} />
             </div>
             <div className="absolute top-1/2 mt-1 w-full">
-              <MatchCard match={THIRD} teams={teams} standings={currentStandings} kScores={kScores} onScore={handleScore} />
+              <MatchCard match={THIRD} teams={teams} standings={currentStandings} kScores={kScores} allocation={allocation} onScore={handleScore} />
               <div className="text-[9px] text-gray-600 uppercase tracking-wider mt-1 text-center">3rd Place</div>
             </div>
           </div>
 
           <HalfBracket
             halfRounds={RIGHT} outerIsR32={false}
-            teams={teams} standings={currentStandings} kScores={kScores} onScore={handleScore}
+            teams={teams} standings={currentStandings} kScores={kScores} allocation={allocation} onScore={handleScore}
           />
         </div>
       </div>
