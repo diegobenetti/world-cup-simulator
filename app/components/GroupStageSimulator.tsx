@@ -2,6 +2,8 @@
 
 import { useState, useMemo } from 'react';
 import { KnockoutBracket, getThirdPlaceRanking, allocateThirdPlaces } from './KnockoutBracket';
+import { LanguageToggle } from './LanguageToggle';
+import { useTranslation } from '../lib/LanguageContext';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -90,8 +92,8 @@ function computeStandings(
   );
 }
 
-function formatMatchDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', {
+function formatMatchDate(iso: string, dateLocale: string): string {
+  return new Date(iso).toLocaleDateString(dateLocale, {
     month: 'short',
     day: 'numeric',
     timeZone: 'UTC',
@@ -148,17 +150,18 @@ function StandingsTable({
   standings: TeamStanding[];
   teams: Record<string, Team>;
 }) {
+  const { t } = useTranslation();
   return (
     <table className="w-full text-sm">
       <thead>
         <tr className="text-gray-500 text-xs uppercase tracking-wider">
-          <th className="text-left font-medium pb-1 pr-2">Team</th>
-          <th className="text-center font-medium pb-1 w-6">P</th>
-          <th className="text-center font-medium pb-1 w-6">W</th>
-          <th className="text-center font-medium pb-1 w-6">D</th>
-          <th className="text-center font-medium pb-1 w-6">L</th>
-          <th className="text-center font-medium pb-1 w-8">GD</th>
-          <th className="text-center font-medium pb-1 w-8">Pts</th>
+          <th className="text-left font-medium pb-1 pr-2">{t.colTeam}</th>
+          <th className="text-center font-medium pb-1 w-6">{t.colP}</th>
+          <th className="text-center font-medium pb-1 w-6">{t.colW}</th>
+          <th className="text-center font-medium pb-1 w-6">{t.colD}</th>
+          <th className="text-center font-medium pb-1 w-6">{t.colL}</th>
+          <th className="text-center font-medium pb-1 w-8">{t.colGD}</th>
+          <th className="text-center font-medium pb-1 w-8">{t.colPts}</th>
         </tr>
       </thead>
       <tbody>
@@ -199,27 +202,28 @@ function ThirdPlaceRanking({
   standings: Record<string, TeamStanding[]>;
   teams: Record<string, Team>;
 }) {
+  const { t } = useTranslation();
   const ranked = getThirdPlaceRanking(standings);
   const allocation = allocateThirdPlaces(standings);
   if (ranked.length === 0) return null;
 
   return (
     <div className="max-w-[700px] mx-auto px-2 pb-6">
-      <h2 className="text-base font-bold tracking-tight text-white mb-3">Best Third-Place Teams</h2>
+      <h2 className="text-base font-bold tracking-tight text-white mb-3">{t.bestThirdTitle}</h2>
       <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
         <table className="w-full text-xs">
           <thead>
             <tr className="text-gray-500 text-[10px] uppercase tracking-wider">
               <th className="text-center py-2 w-7 font-medium">#</th>
-              <th className="text-center py-2 w-8 font-medium">Grp</th>
-              <th className="text-left py-2 pl-2 font-medium">Team</th>
-              <th className="text-center py-2 w-7 font-medium">P</th>
-              <th className="text-center py-2 w-7 font-medium">W</th>
-              <th className="text-center py-2 w-7 font-medium">D</th>
-              <th className="text-center py-2 w-7 font-medium">L</th>
-              <th className="text-center py-2 w-10 font-medium">GD</th>
-              <th className="text-center py-2 w-10 font-medium">Pts</th>
-              <th className="text-center py-2 w-14 font-medium">Slot</th>
+              <th className="text-center py-2 w-8 font-medium">{t.colGrp}</th>
+              <th className="text-left py-2 pl-2 font-medium">{t.colTeam}</th>
+              <th className="text-center py-2 w-7 font-medium">{t.colP}</th>
+              <th className="text-center py-2 w-7 font-medium">{t.colW}</th>
+              <th className="text-center py-2 w-7 font-medium">{t.colD}</th>
+              <th className="text-center py-2 w-7 font-medium">{t.colL}</th>
+              <th className="text-center py-2 w-10 font-medium">{t.colGD}</th>
+              <th className="text-center py-2 w-10 font-medium">{t.colPts}</th>
+              <th className="text-center py-2 w-14 font-medium">{t.colSlot}</th>
             </tr>
           </thead>
           <tbody>
@@ -234,7 +238,7 @@ function ThirdPlaceRanking({
                 rows.push(
                   <tr key="sep">
                     <td colSpan={10} className="text-center text-[9px] text-gray-500 uppercase tracking-wider py-1.5 border-t border-gray-700 bg-gray-800/40">
-                      eliminated
+                      {t.eliminated}
                     </td>
                   </tr>
                 );
@@ -299,6 +303,7 @@ function GroupCard({
   matchSchedule: MatchInfo[];
   onScoreChange: (matchKey: string, side: 'home' | 'away', value: string) => void;
 }) {
+  const { t } = useTranslation();
   const isSimulated = groupIsModified(groupScores, initialGroupScores);
   const hasAnyScore = Object.values(groupScores).some(s => s.home !== '' || s.away !== '');
   const standings = hasAnyScore
@@ -312,14 +317,14 @@ function GroupCard({
     <div className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden">
       {/* Header */}
       <div className="bg-green-800 px-3 py-1.5 flex items-center justify-between">
-        <h2 className="font-bold text-white tracking-wide">Group {label}</h2>
+        <h2 className="font-bold text-white tracking-wide">{t.groupLabel(label)}</h2>
         {isSimulated ? (
           <span className="text-xs font-semibold bg-amber-500 text-gray-950 px-2 py-0.5 rounded-full">
-            SIM
+            {t.simBadge}
           </span>
         ) : (
           <span className="text-xs font-semibold bg-green-500/30 text-green-300 px-2 py-0.5 rounded-full">
-            LIVE
+            {t.liveBadge}
           </span>
         )}
       </div>
@@ -342,7 +347,7 @@ function GroupCard({
                   <div key={key} className="flex items-center gap-1.5">
                     {date && colIdx === 1 && (
                       <span className="text-gray-600 text-[10px] w-12 shrink-0 text-right">
-                        {formatMatchDate(date)}
+                        {formatMatchDate(date, t.dateLocale)}
                       </span>
                     )}
                     <Flag code={home} />
@@ -358,7 +363,7 @@ function GroupCard({
                     <Flag code={away} />
                     {date && colIdx === 0 && (
                       <span className="text-gray-600 text-[10px] w-12 shrink-0">
-                        {formatMatchDate(date)}
+                        {formatMatchDate(date, t.dateLocale)}
                       </span>
                     )}
                   </div>
@@ -387,6 +392,7 @@ export function GroupStageSimulator({
   initialScores: Record<string, GroupScores>;
   matchSchedule: Record<string, MatchInfo[]>;
 }) {
+  const { t } = useTranslation();
   const [scores, setScores] = useState<AllScores>(initialScores);
 
   const hasAnySimulation = Object.keys(groups).some((label) =>
@@ -439,17 +445,20 @@ export function GroupStageSimulator({
       {/* Sticky top bar */}
       <header className="sticky top-0 z-10 bg-gray-950/95 backdrop-blur border-b border-gray-800 px-6 py-3 flex items-center justify-between">
         <h1 className="text-base font-bold tracking-tight">
-          FIFA World Cup 2026 — Group Stage Simulator
+          {t.pageTitle}
         </h1>
-        <button
-          onClick={handleReset}
-          disabled={!hasAnySimulation}
-          className="text-sm px-4 py-1.5 rounded-full border border-gray-600 text-gray-300 transition-all
-            enabled:hover:border-white enabled:hover:text-white enabled:cursor-pointer
-            disabled:opacity-30 disabled:cursor-default"
-        >
-          Reset to current standings
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleReset}
+            disabled={!hasAnySimulation}
+            className="text-sm px-4 py-1.5 rounded-full border border-gray-600 text-gray-300 transition-all
+              enabled:hover:border-white enabled:hover:text-white enabled:cursor-pointer
+              disabled:opacity-30 disabled:cursor-default"
+          >
+            {t.resetButton}
+          </button>
+          <LanguageToggle />
+        </div>
       </header>
 
       {/* Groups grid */}

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import type { Team, TeamStanding } from './GroupStageSimulator';
+import { useTranslation } from '../lib/LanguageContext';
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -75,9 +76,6 @@ const RIGHT: BM[][] = [
 const FINAL: BM     = { n: 104, a: 'W101', b: 'W102' };
 const THIRD: BM     = { n: 103, a: 'RU101', b: 'RU102' };
 
-// Column headers for the 9-column bracket
-const LEFT_HEADERS  = ['Round of 32', 'Round of 16', 'Quarter-final', 'Semi-final'];
-const RIGHT_HEADERS = ['Semi-final', 'Quarter-final', 'Round of 16', 'Round of 32'];
 
 // ── Slot resolution ────────────────────────────────────────────────────────
 
@@ -289,8 +287,12 @@ export function KnockoutBracket({
   teams: Record<string, Team>;
   currentStandings: Record<string, TeamStanding[]>;
 }) {
+  const { t } = useTranslation();
   const [kScores, setKScores] = useState<KScores>({});
   const allocation = useMemo(() => allocateThirdPlaces(currentStandings), [currentStandings]);
+
+  const LEFT_HEADERS  = [t.roundOf32, t.roundOf16, t.quarterFinal, t.semiFinal];
+  const RIGHT_HEADERS = [t.semiFinal, t.quarterFinal, t.roundOf16, t.roundOf32];
 
   function handleScore(n: number, side: 'a' | 'b', v: string) {
     setKScores(prev => ({ ...prev, [n]: { ...(prev[n] ?? { a: '', b: '' }), [side]: v } }));
@@ -298,7 +300,7 @@ export function KnockoutBracket({
 
   return (
     <div className="max-w-[1400px] mx-auto px-2 pb-10">
-      <h2 className="text-base font-bold tracking-tight text-white mb-3">Knockout Bracket</h2>
+      <h2 className="text-base font-bold tracking-tight text-white mb-3">{t.knockoutBracketTitle}</h2>
 
       <div className="overflow-x-auto pb-2">
         {/* Round headers — 9 columns */}
@@ -322,12 +324,12 @@ export function KnockoutBracket({
           {/* Centre column: Final pinned just above mid, 3rd Place just below mid */}
           <div className="relative shrink-0" style={{ width: COL_W, height: HALF_H }}>
             <div className="absolute bottom-1/2 mb-1 w-full">
-              <div className="text-[9px] text-gray-600 uppercase tracking-wider mb-1 text-center">Final</div>
+              <div className="text-[9px] text-gray-600 uppercase tracking-wider mb-1 text-center">{t.final}</div>
               <MatchCard match={FINAL} teams={teams} standings={currentStandings} kScores={kScores} allocation={allocation} onScore={handleScore} />
             </div>
             <div className="absolute top-1/2 mt-1 w-full">
               <MatchCard match={THIRD} teams={teams} standings={currentStandings} kScores={kScores} allocation={allocation} onScore={handleScore} />
-              <div className="text-[9px] text-gray-600 uppercase tracking-wider mt-1 text-center">3rd Place</div>
+              <div className="text-[9px] text-gray-600 uppercase tracking-wider mt-1 text-center">{t.thirdPlace}</div>
             </div>
           </div>
 

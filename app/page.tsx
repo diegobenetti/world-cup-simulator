@@ -7,6 +7,7 @@ import {
   type ScoreEntry,
   type MatchInfo,
 } from './components/GroupStageSimulator';
+import { LanguageProvider } from './lib/LanguageContext';
 
 type StoredMatch = {
   home: string;
@@ -76,12 +77,14 @@ export default function Home() {
   const { groups, teams, standingsByGroup, initialScores, matchSchedule } = loadData();
 
   return (
-    <GroupStageSimulator
-      groups={groups}
-      teams={teams}
-      realStandings={standingsByGroup}
-      initialScores={initialScores}
-      matchSchedule={matchSchedule}
-    />
+    <LanguageProvider>
+      <GroupStageSimulator
+        groups={groups}
+        teams={teams}
+        realStandings={standingsByGroup}
+        initialScores={initialScores}
+        matchSchedule={matchSchedule}
+      />
+    </LanguageProvider>
   );
 }
