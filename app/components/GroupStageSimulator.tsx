@@ -22,7 +22,13 @@ export interface TeamStanding {
 
 export interface Team {
   name: string;
+  namePt?: string;
   code: string;
+}
+
+function teamName(team: Team | undefined, lang: string, fallback: string): string {
+  if (!team) return fallback;
+  return lang === 'pt' ? (team.namePt ?? team.name) : team.name;
 }
 
 export type ScoreEntry = { home: string; away: string };
@@ -151,7 +157,7 @@ function StandingsTable({
   standings: TeamStanding[];
   teams: Record<string, Team>;
 }) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   return (
     <table className="w-full text-sm">
       <thead>
@@ -177,7 +183,7 @@ function StandingsTable({
               <td className="py-1 pr-2">
                 <div className="flex items-center gap-1.5">
                   <Flag code={row.teamCode} size="sm" />
-                  <span className="truncate text-xs">{team?.name ?? row.teamCode}</span>
+                  <span className="truncate text-xs">{teamName(team, lang, row.teamCode)}</span>
                 </div>
               </td>
               <td className="text-center py-1 text-xs">{row.played}</td>
@@ -203,7 +209,7 @@ function ThirdPlaceRanking({
   standings: Record<string, TeamStanding[]>;
   teams: Record<string, Team>;
 }) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const ranked = getThirdPlaceRanking(standings);
   const allocation = allocateThirdPlaces(standings);
   if (ranked.length === 0) return null;
@@ -255,7 +261,7 @@ function ThirdPlaceRanking({
                   <td className="py-1.5 pl-2">
                     <div className="flex items-center gap-1.5">
                       <Flag code={ts.teamCode} size="sm" />
-                      <span className="truncate">{team?.name ?? ts.teamCode}</span>
+                      <span className="truncate">{teamName(team, lang, ts.teamCode)}</span>
                     </div>
                   </td>
                   <td className="text-center py-1.5">{ts.played}</td>

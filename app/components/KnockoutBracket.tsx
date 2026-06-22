@@ -185,6 +185,7 @@ function MatchCard({
   allocation: Record<string, number>;
   onScore: (n: number, side: 'a' | 'b', v: string) => void;
 }) {
+  const { lang } = useTranslation();
   const tA = resolveTeam(match.a, standings, kScores, allocation);
   const tB = resolveTeam(match.b, standings, kScores, allocation);
   const sc = kScores[match.n] ?? { a: '', b: '' };
@@ -199,7 +200,7 @@ function MatchCard({
         <div className="flex-1 min-w-0 min-h-[20px] flex flex-col justify-center">
           {team ? (
             <>
-              <div className="text-[10px] truncate leading-none">{teams[team]?.name ?? team}</div>
+              <div className="text-[10px] truncate leading-none">{(lang === 'pt' ? (teams[team]?.namePt ?? teams[team]?.name) : teams[team]?.name) ?? team}</div>
               <div className="text-[8px] font-mono text-gray-600 leading-none mt-[2px]">{slot}</div>
             </>
           ) : (
