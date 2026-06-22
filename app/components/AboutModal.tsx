@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from '../lib/LanguageContext';
 
 export function AboutModal() {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [open, setOpen] = useState(false);
   const [returnBase, setReturnBase] = useState('');
 
@@ -42,15 +42,15 @@ export function AboutModal() {
             <h2 className="text-lg font-bold mb-2">{t.aboutTitle}</h2>
             <p className="text-gray-400 text-sm mb-6">{t.aboutDescription}</p>
 
-            <div className="border-t border-gray-800 pt-6">
-              <p className="text-xs text-gray-500 mb-4 text-center">{t.donateLabel}</p>
+            <div>
+              <p className="text-gray-400 text-sm mb-4">{t.donateLabel}</p>
               <div className="flex justify-center">
                 <form
                   action="https://www.paypal.com/donate"
                   method="post"
                   target="_top"
                 >
-                  <input type="hidden" name="hosted_button_id" value="2QH5DJT2M4L96" />
+                  <input type="hidden" name="hosted_button_id" value={lang === 'pt' ? '2QH5DJT2M4L96' : '5872ZFKK2WUNC'} />
                   {returnBase && (
                     <>
                       <input type="hidden" name="return" value={`${returnBase}?donation=done`} />
@@ -60,16 +60,20 @@ export function AboutModal() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <input
                     type="image"
-                    src="https://www.paypalobjects.com/pt_BR/i/btn/btn_donate_LG.gif"
+                    src={lang === 'pt'
+                      ? 'https://www.paypalobjects.com/pt_BR/i/btn/btn_donate_LG.gif'
+                      : 'https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif'}
                     name="submit"
                     title="PayPal - The safer, easier way to pay online!"
-                    alt="Faça doações com o botão do PayPal"
+                    alt={lang === 'pt' ? 'Faça doações com o botão do PayPal' : 'Donate with the PayPal button'}
                     className="cursor-pointer"
                   />
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     alt=""
-                    src="https://www.paypal.com/pt_BR/i/scr/pixel.gif"
+                    src={lang === 'pt'
+                      ? 'https://www.paypal.com/pt_BR/i/scr/pixel.gif'
+                      : 'https://www.paypal.com/en_US/i/scr/pixel.gif'}
                     width={1}
                     height={1}
                   />
