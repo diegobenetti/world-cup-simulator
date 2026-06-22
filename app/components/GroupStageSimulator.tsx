@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { KnockoutBracket, getThirdPlaceRanking, allocateThirdPlaces } from './KnockoutBracket';
 import { LanguageToggle } from './LanguageToggle';
+import { AboutModal } from './AboutModal';
 import { useTranslation } from '../lib/LanguageContext';
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -451,13 +452,14 @@ export function GroupStageSimulator({
           <button
             onClick={handleReset}
             disabled={!hasAnySimulation}
-            className="text-sm px-4 py-1.5 rounded-full border border-gray-600 text-gray-300 transition-all
+            className="flex items-center h-9 text-sm px-4 rounded-full border border-gray-600 text-gray-300 transition-all
               enabled:hover:border-white enabled:hover:text-white enabled:cursor-pointer
               disabled:opacity-30 disabled:cursor-default"
           >
             {t.resetButton}
           </button>
           <LanguageToggle />
+          <AboutModal />
         </div>
       </header>
 

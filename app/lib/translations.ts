@@ -1,6 +1,13 @@
 export type Language = 'pt' | 'en';
 
 type TranslationDict = {
+  donationDoneTitle: string;
+  donationDoneMessage: string;
+  donationCanceledTitle: string;
+  donationCanceledMessage: string;
+  aboutTitle: string;
+  aboutDescription: string;
+  donateLabel: string;
   pageTitle: string;
   resetButton: string;
   groupLabel: (label: string) => string;
@@ -29,6 +36,13 @@ type TranslationDict = {
 
 export const translations: Record<Language, TranslationDict> = {
   pt: {
+    donationDoneTitle: '☕️ Obrigado pelo apoio!',
+    donationDoneMessage: 'Sua contribuição ajuda a manter esse projeto vivo. Fico muito grato!',
+    donationCanceledTitle: 'Sem problema!',
+    donationCanceledMessage: 'Apoio não precisa ser financeiro, compartilhar o projeto também ajuda muito!',
+    aboutTitle: 'Sobre',
+    aboutDescription: 'Criado por Diego Benetti: desenvolvedor e apaixonado por futebol!',
+    donateLabel: 'Se curtiu o projeto, considere apoiar:',
     pageTitle: 'Copa do Mundo 2026 - Simulador',
     resetButton: 'Redefinir classificação',
     groupLabel: (label) => `Grupo ${label}`,
@@ -55,6 +69,13 @@ export const translations: Record<Language, TranslationDict> = {
     dateLocale: 'pt-BR',
   },
   en: {
+    donationDoneTitle: '☕️ Thank you for your support!',
+    donationDoneMessage: 'Your contribution helps keep this project running. I truly appreciate it!',
+    donationCanceledTitle: 'No worries!',
+    donationCanceledMessage: "Thanks for visiting us. Your support doesn't have to be financial, sharing the project means a lot!",
+    aboutTitle: 'About',
+    aboutDescription: 'Built by Diego Benetti: developer & football fan',
+    donateLabel: 'If you enjoy the project, consider supporting it:',
     pageTitle: 'World Cup 2026 - Simulator',
     resetButton: 'Reset standings',
     groupLabel: (label) => `Group ${label}`,

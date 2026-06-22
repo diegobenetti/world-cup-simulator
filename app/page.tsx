@@ -8,6 +8,7 @@ import {
   type MatchInfo,
 } from './components/GroupStageSimulator';
 import { LanguageProvider } from './lib/LanguageContext';
+import { DonationToast } from './components/DonationToast';
 
 type StoredMatch = {
   home: string;
@@ -78,6 +79,7 @@ export default function Home() {
 
   return (
     <LanguageProvider>
+      <DonationToast />
       <GroupStageSimulator
         groups={groups}
         teams={teams}
