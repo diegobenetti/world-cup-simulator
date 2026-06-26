@@ -510,47 +510,47 @@
     "D": [
       {
         "teamCode": "USA",
-        "played": 2,
+        "played": 3,
         "won": 2,
         "drawn": 0,
-        "lost": 0,
-        "goalsFor": 6,
-        "goalsAgainst": 1,
-        "goalDifference": 5,
+        "lost": 1,
+        "goalsFor": 8,
+        "goalsAgainst": 4,
+        "goalDifference": 4,
         "points": 6
       },
       {
         "teamCode": "AUS",
-        "played": 2,
+        "played": 3,
         "won": 1,
-        "drawn": 0,
+        "drawn": 1,
         "lost": 1,
         "goalsFor": 2,
         "goalsAgainst": 2,
         "goalDifference": 0,
-        "points": 3
+        "points": 4
       },
       {
         "teamCode": "PAR",
-        "played": 2,
+        "played": 3,
         "won": 1,
-        "drawn": 0,
+        "drawn": 1,
         "lost": 1,
         "goalsFor": 2,
         "goalsAgainst": 4,
         "goalDifference": -2,
-        "points": 3
+        "points": 4
       },
       {
         "teamCode": "TUR",
-        "played": 2,
-        "won": 0,
+        "played": 3,
+        "won": 1,
         "drawn": 0,
         "lost": 2,
-        "goalsFor": 0,
-        "goalsAgainst": 3,
-        "goalDifference": -3,
-        "points": 0
+        "goalsFor": 3,
+        "goalsAgainst": 5,
+        "goalDifference": -2,
+        "points": 3
       }
     ]
   }

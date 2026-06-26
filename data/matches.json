@@ -120,15 +120,15 @@
       "home": "AUS",
       "away": "PAR",
       "date": "2026-06-26T02:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 0,
+      "awayScore": 0
     },
     {
       "home": "USA",
       "away": "TUR",
       "date": "2026-06-26T02:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 2,
+      "awayScore": 3
     }
   ],
   "C": [
