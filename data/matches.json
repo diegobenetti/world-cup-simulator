@@ -296,15 +296,15 @@
       "home": "ESP",
       "away": "URU",
       "date": "2026-06-27T00:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 1,
+      "awayScore": 0
     },
     {
       "home": "CPV",
       "away": "KSA",
       "date": "2026-06-27T00:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 0,
+      "awayScore": 0
     }
   ],
   "G": [
@@ -340,15 +340,15 @@
       "home": "BEL",
       "away": "NZL",
       "date": "2026-06-27T03:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 5,
+      "awayScore": 1
     },
     {
       "home": "EGY",
       "away": "IRN",
       "date": "2026-06-27T03:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 1,
+      "awayScore": 1
     }
   ],
   "I": [
@@ -384,15 +384,15 @@
       "home": "SEN",
       "away": "IRQ",
       "date": "2026-06-26T19:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 5,
+      "awayScore": 0
     },
     {
       "home": "FRA",
       "away": "NOR",
       "date": "2026-06-26T19:00:00Z",
-      "homeScore": null,
-      "awayScore": null
+      "homeScore": 4,
+      "awayScore": 1
     }
   ],
   "J": [
