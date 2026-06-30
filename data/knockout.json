@@ -1,0 +1,130 @@
+{
+  "73": {
+    "home": "RSA",
+    "homeScore": 0,
+    "away": "CAN",
+    "awayScore": 1,
+    "homePen": null,
+    "awayPen": null
+  },
+  "74": {
+    "home": "GER",
+    "homeScore": 1,
+    "away": "PAR",
+    "awayScore": 1,
+    "homePen": 3,
+    "awayPen": 4
+  },
+  "75": {
+    "home": "NED",
+    "homeScore": null,
+    "away": "MAR",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "76": {
+    "home": "BRA",
+    "homeScore": 2,
+    "away": "JPN",
+    "awayScore": 1,
+    "homePen": null,
+    "awayPen": null
+  },
+  "77": {
+    "home": "FRA",
+    "homeScore": null,
+    "away": "SWE",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "78": {
+    "home": "CIV",
+    "homeScore": null,
+    "away": "NOR",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "79": {
+    "home": "MEX",
+    "homeScore": null,
+    "away": "ECU",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "80": {
+    "home": "ENG",
+    "homeScore": null,
+    "away": "COD",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "81": {
+    "home": "USA",
+    "homeScore": null,
+    "away": "BIH",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "82": {
+    "home": "BEL",
+    "homeScore": null,
+    "away": "SEN",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "83": {
+    "home": "POR",
+    "homeScore": null,
+    "away": "CRO",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "84": {
+    "home": "ESP",
+    "homeScore": null,
+    "away": "AUT",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "85": {
+    "home": "SUI",
+    "homeScore": null,
+    "away": "ALG",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "86": {
+    "home": "ARG",
+    "homeScore": null,
+    "away": "CPV",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "87": {
+    "home": "COL",
+    "homeScore": null,
+    "away": "GHA",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "88": {
+    "home": "AUS",
+    "homeScore": null,
+    "away": "EGY",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  }
+}

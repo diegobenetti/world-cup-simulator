@@ -26,9 +26,15 @@ export const THIRD_SLOTS: Record<number, string[]> = {
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
-type KScore = { a: string; b: string };
+type KScore = { a: string; b: string; penA?: string; penB?: string };
 type KScores = Record<number, KScore>;
 interface BM { n: number; a: string; b: string; }
+
+export type KnockoutApiData = Record<number, {
+  home: string; homeScore: number | null;
+  away: string; awayScore: number | null;
+  homePen: number | null; awayPen: number | null;
+}>;
 
 // ── Bracket halves ─────────────────────────────────────────────────────────
 // Left half: R32 → R16 → QF → SF (reads left to right)
@@ -152,20 +158,61 @@ function resolveTeam(slot: string, standings: Record<string, TeamStanding[]>, kS
     const n = parseInt(wm[1]), sc = kScores[n];
     if (!sc || sc.a === '' || sc.b === '') return null;
     const sa = parseInt(sc.a), sb = parseInt(sc.b);
-    if (isNaN(sa) || isNaN(sb) || sa === sb) return null;
+    if (isNaN(sa) || isNaN(sb)) return null;
     const ms = MATCH_SLOTS[n];
-    return ms ? resolveTeam(sa > sb ? ms.a : ms.b, standings, kScores, allocation, depth + 1) : null;
+    if (sa !== sb) return ms ? resolveTeam(sa > sb ? ms.a : ms.b, standings, kScores, allocation, depth + 1) : null;
+    const pa = parseInt(sc.penA ?? ''), pb = parseInt(sc.penB ?? '');
+    if (!isNaN(pa) && !isNaN(pb) && pa !== pb)
+      return ms ? resolveTeam(pa > pb ? ms.a : ms.b, standings, kScores, allocation, depth + 1) : null;
+    return null;
   }
   const ru = slot.match(/^RU(\d+)$/);
   if (ru) {
     const n = parseInt(ru[1]), sc = kScores[n];
     if (!sc || sc.a === '' || sc.b === '') return null;
     const sa = parseInt(sc.a), sb = parseInt(sc.b);
-    if (isNaN(sa) || isNaN(sb) || sa === sb) return null;
+    if (isNaN(sa) || isNaN(sb)) return null;
     const ms = MATCH_SLOTS[n];
-    return ms ? resolveTeam(sa > sb ? ms.b : ms.a, standings, kScores, allocation, depth + 1) : null;
+    if (sa !== sb) return ms ? resolveTeam(sa > sb ? ms.b : ms.a, standings, kScores, allocation, depth + 1) : null;
+    const pa = parseInt(sc.penA ?? ''), pb = parseInt(sc.penB ?? '');
+    if (!isNaN(pa) && !isNaN(pb) && pa !== pb)
+      return ms ? resolveTeam(pa > pb ? ms.b : ms.a, standings, kScores, allocation, depth + 1) : null;
+    return null;
   }
   return null;
+}
+
+// ── Initial score resolver ─────────────────────────────────────────────────
+
+function initKnockoutScores(
+  apiData: KnockoutApiData,
+  standings: Record<string, TeamStanding[]>,
+  allocation: Record<string, number>,
+): KScores {
+  const scores: KScores = {};
+  const allMatches = [...LEFT.flat(), ...RIGHT.flat(), FINAL, THIRD];
+
+  // Multiple passes so later rounds can resolve once earlier rounds are populated
+  for (let pass = 0; pass < 6; pass++) {
+    for (const match of allMatches) {
+      if (scores[match.n]) continue;
+      const api = apiData[match.n];
+      if (!api || api.homeScore === null || api.awayScore === null) continue;
+      const teamA = resolveTeam(match.a, standings, scores, allocation);
+      const teamB = resolveTeam(match.b, standings, scores, allocation);
+      if (!teamA || !teamB) continue;
+      const aIsHome = api.home === teamA;
+      scores[match.n] = {
+        a: String(aIsHome ? api.homeScore : api.awayScore),
+        b: String(aIsHome ? api.awayScore : api.homeScore),
+        ...(api.homePen !== null && api.awayPen !== null ? {
+          penA: String(aIsHome ? api.homePen : api.awayPen),
+          penB: String(aIsHome ? api.awayPen : api.homePen),
+        } : {}),
+      };
+    }
+  }
+  return scores;
 }
 
 // ── Sub-components ──────────────────────────────────────────────────────────
@@ -190,8 +237,10 @@ function MatchCard({
   const tB = resolveTeam(match.b, standings, kScores, allocation);
   const sc = kScores[match.n] ?? { a: '', b: '' };
   const sa = parseInt(sc.a), sb = parseInt(sc.b);
-  const winA = !isNaN(sa) && !isNaN(sb) && sa > sb;
-  const winB = !isNaN(sa) && !isNaN(sb) && sb > sa;
+  const pa = parseInt(sc.penA ?? ''), pb = parseInt(sc.penB ?? '');
+  const hasPen = !isNaN(pa) && !isNaN(pb) && pa !== pb;
+  const winA = !isNaN(sa) && !isNaN(sb) && (sa > sb || (sa === sb && hasPen && pa > pb));
+  const winB = !isNaN(sa) && !isNaN(sb) && (sb > sa || (sa === sb && hasPen && pb > pa));
 
   function Row({ team, slot, score, side, win }: { team: string | null; slot: string; score: string; side: 'a' | 'b'; win: boolean }) {
     return (
@@ -222,6 +271,11 @@ function MatchCard({
       <div className="text-gray-600 text-[9px] font-mono leading-none">M{match.n}</div>
       <Row team={tA} slot={match.a} score={sc.a} side="a" win={winA} />
       <Row team={tB} slot={match.b} score={sc.b} side="b" win={winB} />
+      {hasPen && (
+        <div className="text-[8px] text-amber-600 font-mono text-center leading-none">
+          pen. {pa}–{pb}
+        </div>
+      )}
     </div>
   );
 }
@@ -284,19 +338,27 @@ function HalfBracket({
 export function KnockoutBracket({
   teams,
   currentStandings,
+  knockoutData,
 }: {
   teams: Record<string, Team>;
   currentStandings: Record<string, TeamStanding[]>;
+  knockoutData: KnockoutApiData;
 }) {
   const { t } = useTranslation();
-  const [kScores, setKScores] = useState<KScores>({});
   const allocation = useMemo(() => allocateThirdPlaces(currentStandings), [currentStandings]);
+  const [kScores, setKScores] = useState<KScores>(() =>
+    initKnockoutScores(knockoutData, currentStandings, allocateThirdPlaces(currentStandings))
+  );
 
   const LEFT_HEADERS  = [t.roundOf32, t.roundOf16, t.quarterFinal, t.semiFinal];
   const RIGHT_HEADERS = [t.semiFinal, t.quarterFinal, t.roundOf16, t.roundOf32];
 
   function handleScore(n: number, side: 'a' | 'b', v: string) {
-    setKScores(prev => ({ ...prev, [n]: { ...(prev[n] ?? { a: '', b: '' }), [side]: v } }));
+    setKScores(prev => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { penA: _a, penB: _b, ...rest } = prev[n] ?? { a: '', b: '' };
+      return { ...prev, [n]: { ...rest, [side]: v } };
+    });
   }
 
   return (

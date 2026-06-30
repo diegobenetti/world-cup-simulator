@@ -80,11 +80,15 @@ interface FifaMatchTeam {
 
 interface FifaMatchEntry {
   IdGroup: string;
+  MatchNumber: number;
   Home: FifaMatchTeam;
   Away: FifaMatchTeam;
   Date: string;
   HomeTeamScore: number | null;
   AwayTeamScore: number | null;
+  HomeTeamPenaltyScore: number | null;
+  AwayTeamPenaltyScore: number | null;
+  StageName: { Locale: string; Description: string }[];
 }
 
 interface FifaMatchesResponse {
@@ -100,11 +104,14 @@ const STANDINGS_DIR = join(DATA_DIR, 'standings');
 const GROUPS_FILE = join(DATA_DIR, 'groups.json');
 const TEAMS_FILE = join(DATA_DIR, 'teams.json');
 const MATCHES_FILE = join(DATA_DIR, 'matches.json');
+const KNOCKOUT_FILE = join(DATA_DIR, 'knockout.json');
 
 // Known IDs (from the FIFA API)
 const COMPETITION_ID = '17';
 const SEASON_ID = '285023';
 const STAGE_ID = '289273'; // group stage
+
+const KNOCKOUT_STAGE_IDS = ['289287', '289288', '289289', '289290', '289291', '289292'];
 
 const USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36';
 
@@ -310,6 +317,41 @@ async function main() {
   const playedCount = Object.values(matchData).flat().filter(m => m.homeScore !== null).length;
   writeFileSync(MATCHES_FILE, JSON.stringify(matchData, null, 2));
   console.log(`  ${playedCount} played, ${Object.values(matchData).flat().length} total match(es) saved to data/matches.json`);
+
+  // ── Fetch knockout stage match results ───────────────────────────────
+
+  console.log('\nFetching knockout match results from FIFA API...');
+
+  type KnockoutRecord = {
+    home: string; homeScore: number | null; away: string; awayScore: number | null;
+    homePen: number | null; awayPen: number | null;
+  };
+  const knockoutData: Record<number, KnockoutRecord> = {};
+
+  for (const stageId of KNOCKOUT_STAGE_IDS) {
+    const url = `https://api.fifa.com/api/v3/calendar/matches?language=en&count=100&idSeason=${SEASON_ID}&idStage=${stageId}`;
+    const resp = await apiFetch<FifaMatchesResponse>(url);
+    for (const m of resp.Results ?? []) {
+      const mn = m.MatchNumber;
+      if (!mn) continue;
+      const hCode = m.Home?.Abbreviation;
+      const aCode = m.Away?.Abbreviation;
+      if (!hCode || !aCode) continue;
+      const played = m.HomeTeamScore !== null && m.AwayTeamScore !== null;
+      knockoutData[mn] = {
+        home: hCode,
+        homeScore: played ? (m.HomeTeamScore ?? null) : null,
+        away: aCode,
+        awayScore: played ? (m.AwayTeamScore ?? null) : null,
+        homePen: m.HomeTeamPenaltyScore ?? null,
+        awayPen: m.AwayTeamPenaltyScore ?? null,
+      };
+    }
+  }
+
+  const playedKnockout = Object.values(knockoutData).filter(m => m.homeScore !== null).length;
+  writeFileSync(KNOCKOUT_FILE, JSON.stringify(knockoutData, null, 2));
+  console.log(`  ${playedKnockout} played knockout match(es) saved to data/knockout.json`);
 
   // ── Print summary ─────────────────────────────────────────────────────
 

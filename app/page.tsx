@@ -24,6 +24,7 @@ function loadData(): {
   standingsByGroup: Record<string, TeamStanding[]>;
   initialScores: Record<string, Record<string, ScoreEntry>>;
   matchSchedule: Record<string, MatchInfo[]>;
+  knockoutData: Record<number, { home: string; homeScore: number | null; away: string; awayScore: number | null; homePen: number | null; awayPen: number | null }>;
 } {
   const dataDir = join(process.cwd(), 'data');
 
@@ -71,11 +72,16 @@ function loadData(): {
     }
   }
 
-  return { groups, teams, standingsByGroup, initialScores, matchSchedule };
+  const knockoutFile = join(dataDir, 'knockout.json');
+  const knockoutData = existsSync(knockoutFile)
+    ? JSON.parse(readFileSync(knockoutFile, 'utf-8'))
+    : {};
+
+  return { groups, teams, standingsByGroup, initialScores, matchSchedule, knockoutData };
 }
 
 export default function Home() {
-  const { groups, teams, standingsByGroup, initialScores, matchSchedule } = loadData();
+  const { groups, teams, standingsByGroup, initialScores, matchSchedule, knockoutData } = loadData();
 
   return (
     <LanguageProvider>
@@ -86,6 +92,7 @@ export default function Home() {
         realStandings={standingsByGroup}
         initialScores={initialScores}
         matchSchedule={matchSchedule}
+        knockoutData={knockoutData}
       />
     </LanguageProvider>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { KnockoutBracket, getThirdPlaceRanking, allocateThirdPlaces } from './KnockoutBracket';
+import { KnockoutBracket, getThirdPlaceRanking, allocateThirdPlaces, type KnockoutApiData } from './KnockoutBracket';
 import { LanguageToggle } from './LanguageToggle';
 import { AboutModal } from './AboutModal';
 import { useTranslation } from '../lib/LanguageContext';
@@ -392,12 +392,14 @@ export function GroupStageSimulator({
   realStandings,
   initialScores,
   matchSchedule,
+  knockoutData,
 }: {
   groups: Record<string, string[]>;
   teams: Record<string, Team>;
   realStandings: Record<string, TeamStanding[]>;
   initialScores: Record<string, GroupScores>;
   matchSchedule: Record<string, MatchInfo[]>;
+  knockoutData: KnockoutApiData;
 }) {
   const { t } = useTranslation();
   const [scores, setScores] = useState<AllScores>(initialScores);
@@ -512,7 +514,7 @@ export function GroupStageSimulator({
 
       {/* Knockout Bracket */}
       <div className="pt-6">
-        <KnockoutBracket teams={teams} currentStandings={currentStandings} />
+        <KnockoutBracket teams={teams} currentStandings={currentStandings} knockoutData={knockoutData} />
       </div>
     </div>
   );
