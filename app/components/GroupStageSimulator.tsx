@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { KnockoutBracket, getThirdPlaceRanking, allocateThirdPlaces, type KnockoutApiData } from './KnockoutBracket';
+import { KnockoutBracket, getThirdPlaceRanking, computeAllocation, type KnockoutApiData } from './KnockoutBracket';
 import { LanguageToggle } from './LanguageToggle';
 import { AboutModal } from './AboutModal';
 import { useTranslation } from '../lib/LanguageContext';
@@ -205,13 +205,15 @@ function StandingsTable({
 function ThirdPlaceRanking({
   standings,
   teams,
+  knockoutData,
 }: {
   standings: Record<string, TeamStanding[]>;
   teams: Record<string, Team>;
+  knockoutData: KnockoutApiData;
 }) {
   const { t, lang } = useTranslation();
   const ranked = getThirdPlaceRanking(standings);
-  const allocation = allocateThirdPlaces(standings);
+  const allocation = computeAllocation(knockoutData, standings);
   if (ranked.length === 0) return null;
 
   return (
@@ -506,7 +508,7 @@ export function GroupStageSimulator({
 
       {/* Third-place ranking */}
       <div className="pt-6">
-        <ThirdPlaceRanking standings={currentStandings} teams={teams} />
+        <ThirdPlaceRanking standings={currentStandings} teams={teams} knockoutData={knockoutData} />
       </div>
 
       {/* Divider */}

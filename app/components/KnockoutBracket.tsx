@@ -133,6 +133,44 @@ export function allocateThirdPlaces(
   return result;
 }
 
+// Derives third-place slot allocation from actual knockout bracket data (teams already set by
+// the FIFA API) rather than computing it algorithmically. Falls back to bipartite matching for
+// any slots whose teams aren't known yet.
+export function computeAllocation(
+  knockoutData: KnockoutApiData,
+  standings: Record<string, TeamStanding[]>,
+): Record<string, number> {
+  const teamPos: Record<string, { group: string; pos: number }> = {};
+  for (const [group, rows] of Object.entries(standings)) {
+    rows.forEach((r, i) => { teamPos[r.teamCode] = { group, pos: i }; });
+  }
+
+  const allocation: Record<string, number> = {};
+  for (const [slotStr, eligibleGroups] of Object.entries(THIRD_SLOTS)) {
+    const slot = parseInt(slotStr);
+    const api = knockoutData[slot];
+    if (!api) continue;
+    for (const code of [api.home, api.away]) {
+      const info = teamPos[code];
+      if (info && info.pos === 2 && eligibleGroups.includes(info.group)) {
+        allocation[info.group] = slot;
+        break;
+      }
+    }
+  }
+
+  // Fill remaining slots via bipartite matching if bracket isn't fully set yet
+  if (Object.keys(allocation).length < Object.keys(THIRD_SLOTS).length) {
+    const covered = new Set(Object.keys(allocation));
+    const fallback = allocateThirdPlaces(standings);
+    for (const [group, slot] of Object.entries(fallback)) {
+      if (!covered.has(group)) allocation[group] = slot;
+    }
+  }
+
+  return allocation;
+}
+
 function resolveThirdSlot(
   eligible: string[],
   standings: Record<string, TeamStanding[]>,
@@ -345,9 +383,9 @@ export function KnockoutBracket({
   knockoutData: KnockoutApiData;
 }) {
   const { t } = useTranslation();
-  const allocation = useMemo(() => allocateThirdPlaces(currentStandings), [currentStandings]);
+  const allocation = useMemo(() => computeAllocation(knockoutData, currentStandings), [knockoutData, currentStandings]);
   const [kScores, setKScores] = useState<KScores>(() =>
-    initKnockoutScores(knockoutData, currentStandings, allocateThirdPlaces(currentStandings))
+    initKnockoutScores(knockoutData, currentStandings, computeAllocation(knockoutData, currentStandings))
   );
 
   const LEFT_HEADERS  = [t.roundOf32, t.roundOf16, t.quarterFinal, t.semiFinal];
