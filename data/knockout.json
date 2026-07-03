@@ -17,11 +17,11 @@
   },
   "75": {
     "home": "NED",
-    "homeScore": null,
+    "homeScore": 1,
     "away": "MAR",
-    "awayScore": null,
-    "homePen": null,
-    "awayPen": null
+    "awayScore": 1,
+    "homePen": 2,
+    "awayPen": 3
   },
   "76": {
     "home": "BRA",
@@ -33,65 +33,65 @@
   },
   "77": {
     "home": "FRA",
-    "homeScore": null,
+    "homeScore": 3,
     "away": "SWE",
-    "awayScore": null,
+    "awayScore": 0,
     "homePen": null,
     "awayPen": null
   },
   "78": {
     "home": "CIV",
-    "homeScore": null,
+    "homeScore": 1,
     "away": "NOR",
-    "awayScore": null,
+    "awayScore": 2,
     "homePen": null,
     "awayPen": null
   },
   "79": {
     "home": "MEX",
-    "homeScore": null,
+    "homeScore": 2,
     "away": "ECU",
-    "awayScore": null,
+    "awayScore": 0,
     "homePen": null,
     "awayPen": null
   },
   "80": {
     "home": "ENG",
-    "homeScore": null,
+    "homeScore": 2,
     "away": "COD",
-    "awayScore": null,
+    "awayScore": 1,
     "homePen": null,
     "awayPen": null
   },
   "81": {
     "home": "USA",
-    "homeScore": null,
+    "homeScore": 2,
     "away": "BIH",
-    "awayScore": null,
+    "awayScore": 0,
     "homePen": null,
     "awayPen": null
   },
   "82": {
     "home": "BEL",
-    "homeScore": null,
+    "homeScore": 3,
     "away": "SEN",
-    "awayScore": null,
+    "awayScore": 2,
     "homePen": null,
     "awayPen": null
   },
   "83": {
     "home": "POR",
-    "homeScore": null,
+    "homeScore": 2,
     "away": "CRO",
-    "awayScore": null,
+    "awayScore": 1,
     "homePen": null,
     "awayPen": null
   },
   "84": {
     "home": "ESP",
-    "homeScore": null,
+    "homeScore": 3,
     "away": "AUT",
-    "awayScore": null,
+    "awayScore": 0,
     "homePen": null,
     "awayPen": null
   },
@@ -123,6 +123,54 @@
     "home": "AUS",
     "homeScore": null,
     "away": "EGY",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "89": {
+    "home": "PAR",
+    "homeScore": null,
+    "away": "FRA",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "90": {
+    "home": "CAN",
+    "homeScore": null,
+    "away": "MAR",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "91": {
+    "home": "BRA",
+    "homeScore": null,
+    "away": "NOR",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "92": {
+    "home": "MEX",
+    "homeScore": null,
+    "away": "ENG",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "93": {
+    "home": "POR",
+    "homeScore": null,
+    "away": "ESP",
+    "awayScore": null,
+    "homePen": null,
+    "awayPen": null
+  },
+  "94": {
+    "home": "USA",
+    "homeScore": null,
+    "away": "BEL",
     "awayScore": null,
     "homePen": null,
     "awayPen": null
